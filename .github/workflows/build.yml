@@ -36,11 +36,17 @@ jobs:
       run: qmk compile "users/${{ github.actor }}/${{ matrix.file }}"
       working-directory: qmk_firmware
 
+    # Purely because I can't stand having .json in the middle of the archive name
+    - id: prepare-archive-name
+      run: |
+        value=$(basename ${{ matrix.file }} .json)
+        echo "::set-output name=value::$value"
+
     - name: Archive firmware
       uses: actions/upload-artifact@v3
       continue-on-error: true
       with:
-        name: ${{ matrix.file }}_${{ github.actor }}
+        name: ${{steps.prepare-archive-name.outputs.value}}
         path: |
           qmk_firmware/*.hex
           qmk_firmware/*.bin
