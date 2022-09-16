@@ -28,7 +28,7 @@ jobs:
 
     # Since this repo isn't a true userspace, do some shuffling
     - name: Move QMK configs to userspace
-      run: cp -rp "./qmk" "qmk_firmware/users/${{ github.actor }}/"
+      run: ls . && cp -rp "qmk" "qmk_firmware/users/${{ github.actor }}/"
 
     - name: Build firmware
       run: qmk compile "users/${{ github.actor }}/${{ matrix.file }}"
