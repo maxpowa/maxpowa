@@ -21,24 +21,24 @@ jobs:
       with:
         repository: qmk/qmk_firmware
         submodules: recursive
+        path: qmk_firmware
 
     - name: Checkout userspace
       uses: actions/checkout@v3
-      with:
-        path: ${{ github.actor }}
 
     # Since this repo isn't a true userspace, do some shuffling
     - name: Move QMK configs to userspace
-      run: mkdir -p "users/${{ github.actor }}" && mv "${{ github.actor }}/qmk" "users/${{ github.actor }}"
+      run: cp -rp "./qmk" "qmk_firmware/users/${{ github.actor }}/"
 
     - name: Build firmware
       run: qmk compile "users/${{ github.actor }}/${{ matrix.file }}"
+      working-directory: qmk_firmware
 
     - name: Archive firmware
       uses: actions/upload-artifact@v3
       continue-on-error: true
       with:
-        name: ${{ matrix.file }}_${{ github.actor }}
+        name: qmk_firmware/${{ matrix.file }}_${{ github.actor }}
         path: |
           *.hex
           *.bin
