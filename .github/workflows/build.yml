@@ -23,12 +23,14 @@ jobs:
         submodules: recursive
         path: qmk_firmware
 
-    - name: Checkout userspace
+    - name: Checkout repo
       uses: actions/checkout@v3
+      with:
+        path: ${{ github.actor }}
 
     # Since this repo isn't a true userspace, do some shuffling
     - name: Move QMK configs to userspace
-      run: ls . && cp -rp "qmk" "qmk_firmware/users/${{ github.actor }}/"
+      run: cp -rp "${{ github.actor }}/qmk" "qmk_firmware/users/${{ github.actor }}"
 
     - name: Build firmware
       run: qmk compile "users/${{ github.actor }}/${{ matrix.file }}"
